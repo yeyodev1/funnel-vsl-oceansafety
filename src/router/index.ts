@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory, type RouteMeta } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import FunnelView from '../views/FunnelView.vue'
+import VideoView from '../views/VideoView.vue'
 import PrivacyPolicyView from '../views/PrivacyPolicyView.vue'
 import LegalNoticeView from '../views/LegalNoticeView.vue'
-import ToolsView from '../views/ToolsView.vue'
+import BookingView from '../views/BookingView.vue'
+import BookedView from '../views/BookedView.vue'
+import NoSpaceView from '../views/NoSpaceView.vue'
 
 import 'vue-router'
 
@@ -18,107 +21,76 @@ declare module 'vue-router' {
   }
 }
 
-// ── JSON-LD por página ─────────────────────────────────────────────────────────
-const toolsJsonLd: object[] = [
-  {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    '@id': 'https://bakano.ec/herramientas',
-    url: 'https://bakano.ec/herramientas',
-    name: 'Herramientas de Marketing Digital | Bakano Ecuador',
-    description:
-      'Plataformas tecnológicas desarrolladas por Bakano para potenciar el crecimiento de negocios en Ecuador. Bakano Metrics: analytics en tiempo real para tomar decisiones basadas en datos.',
-    isPartOf: { '@id': 'https://bakano.ec/#website' },
-    publisher: { '@id': 'https://bakano.ec/#organization' },
-    inLanguage: 'es-EC',
-    breadcrumb: {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://bakano.ec/' },
-        { '@type': 'ListItem', position: 2, name: 'Herramientas', item: 'https://bakano.ec/herramientas' },
-      ],
-    },
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Bakano Metrics',
-    alternateName: 'Metrics by Bakano',
-    url: 'https://metrics.bakano.ec',
-    applicationCategory: 'BusinessApplication',
-    operatingSystem: 'Web',
-    description:
-      'Plataforma de analytics y business intelligence en tiempo real desarrollada por Bakano. Visualiza ventas, campañas y audiencias desde un solo dashboard interactivo, basado en tus datos reales.',
-    featureList: [
-      'Dashboards interactivos en tiempo real',
-      'Análisis de rendimiento de campañas',
-      'Métricas de ventas y audiencias',
-      'Reportes automatizados',
-    ],
-    offers: {
-      '@type': 'Offer',
-      availability: 'https://schema.org/InStock',
-      seller: { '@id': 'https://bakano.ec/#organization' },
-    },
-    author: { '@id': 'https://bakano.ec/#organization' },
-    publisher: { '@id': 'https://bakano.ec/#organization' },
-    inLanguage: 'es-EC',
-    keywords:
-      'analytics Ecuador, dashboard marketing digital, métricas negocio Ecuador, business intelligence Ecuador, Bakano Metrics',
-  },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: 'Herramientas Bakano',
-    description: 'Plataformas tecnológicas de Bakano para negocios en Ecuador',
-    url: 'https://bakano.ec/herramientas',
-    numberOfItems: 1,
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Bakano Metrics',
-        url: 'https://metrics.bakano.ec',
-        description:
-          'Plataforma de analytics en tiempo real. Dashboards interactivos para visualizar ventas, campañas y audiencias basados en tus datos reales.',
-      },
-    ],
-  },
-]
-
 // ── Router ─────────────────────────────────────────────────────────────────────
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior: () => ({ top: 0, behavior: 'instant' }),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'funnel',
+      component: FunnelView,
       meta: {
-        title: 'Bakano | Agencia de Marketing Digital #1 en Ecuador',
+        title: 'Bakano | Aumenta tu facturación entre 10% y 20% — Asesoría Gratuita',
         description:
-          'Bakano es la agencia de marketing digital líder en Ecuador. Ayudamos a negocios en Guayaquil y todo Ecuador a aumentar hasta un 20% su facturación con estrategias data-driven, growth marketing y tecnología avanzada.',
+          'Ayudamos a dueños de negocios establecidos a aumentar su facturación entre un 10% y 20% de forma predecible con la metodología Data Growth Business. Agenda tu asesoría gratuita.',
         canonical: 'https://bakano.ec/',
-        ogTitle: 'Bakano | Agencia de Marketing Digital #1 en Ecuador',
+        ogTitle: 'Bakano | Aumenta tu facturación entre 10% y 20%',
         ogDescription:
-          'Aumenta hasta un 20% tu facturación mensual. Más de 150 negocios transformados en Ecuador con estrategias data-driven y growth marketing.',
+          'Metodología Data Growth Business: profesionaliza tu marketing y ventas sin depender de la suerte ni de agencias de viralidad. Asesoría gratuita — cupos limitados.',
         ogUrl: 'https://bakano.ec/',
       } satisfies RouteMeta,
     },
     {
-      path: '/herramientas',
-      name: 'tools',
-      component: ToolsView,
+      path: '/ver-video',
+      name: 'video',
+      component: VideoView,
       meta: {
-        title: 'Herramientas de Marketing Digital | Bakano Ecuador',
-        description:
-          'Descubre las plataformas tecnológicas de Bakano para potenciar tu negocio en Ecuador. Bakano Metrics: analytics en tiempo real, dashboards interactivos y métricas de ventas para tomar decisiones basadas en datos.',
-        canonical: 'https://bakano.ec/herramientas',
-        ogTitle: 'Herramientas Bakano | Analytics y Tecnología para Negocios en Ecuador',
-        ogDescription:
-          'Bakano Metrics: visualiza ventas, campañas y audiencias en tiempo real. La plataforma de analytics que usan los negocios que crecen en Ecuador.',
-        ogUrl: 'https://bakano.ec/herramientas',
-        jsonLd: toolsJsonLd,
+        title: 'Mira el video | Bakano — Paso 1 de 2',
+        description: 'Ve el video completo y descubre cómo la metodología Data Growth Business puede aumentar la facturación de tu negocio entre un 10% y 20%.',
+        canonical: 'https://bakano.ec/ver-video',
+        ogTitle: 'Mira el video | Bakano',
+        ogDescription: 'Ve el video y agenda tu Cita Estratégica gratuita con el equipo de Bakano.',
+        ogUrl: 'https://bakano.ec/ver-video',
+      } satisfies RouteMeta,
+    },
+    {
+      path: '/agendar',
+      name: 'booking',
+      component: BookingView,
+      meta: {
+        title: 'Agenda tu Cita | Bakano — Paso 2 de 2',
+        description: 'Selecciona el día y hora para tu Cita Estratégica gratuita con el equipo de Bakano.',
+        canonical: 'https://bakano.ec/agendar',
+        ogTitle: 'Agenda tu Cita | Bakano',
+        ogDescription: 'Elige tu horario y reserva tu Cita Estratégica gratuita con Bakano.',
+        ogUrl: 'https://bakano.ec/agendar',
+      } satisfies RouteMeta,
+    },
+    {
+      path: '/cita-confirmada',
+      name: 'booked',
+      component: BookedView,
+      meta: {
+        title: 'Cita Confirmada | Bakano',
+        description: 'Tu cita estratégica con el equipo de Bakano está confirmada. Revisa tu correo y prepárate.',
+        canonical: 'https://bakano.ec/cita-confirmada',
+        ogTitle: 'Cita Confirmada | Bakano',
+        ogDescription: 'Tu cita con el equipo de Bakano está reservada. Te contactaremos pronto.',
+        ogUrl: 'https://bakano.ec/cita-confirmada',
+      } satisfies RouteMeta,
+    },
+    {
+      path: '/sin-espacio',
+      name: 'no-space',
+      component: NoSpaceView,
+      meta: {
+        title: 'Sin Espacio Disponible | Bakano',
+        description: 'En este momento los cupos de asesoría de Bakano están completos. Te notificaremos cuando se libere un espacio.',
+        canonical: 'https://bakano.ec/sin-espacio',
+        ogTitle: 'Sin Espacio Disponible | Bakano',
+        ogDescription: 'Los cupos de asesoría están completos. Te avisaremos cuando haya disponibilidad.',
+        ogUrl: 'https://bakano.ec/sin-espacio',
       } satisfies RouteMeta,
     },
     {
@@ -169,22 +141,8 @@ const setCanonical = (href: string) => {
   el.href = href
 }
 
-const syncJsonLd = (schemas: object[] | undefined) => {
-  // Elimina los JSON-LD de página anteriores (mantiene el global del index.html)
-  document.querySelectorAll('script[data-page-jsonld]').forEach(s => s.remove())
-  if (!schemas?.length) return
-  schemas.forEach(schema => {
-    const s = document.createElement('script')
-    s.type = 'application/ld+json'
-    s.setAttribute('data-page-jsonld', 'true')
-    s.textContent = JSON.stringify(schema)
-    document.head.appendChild(s)
-  })
-}
-
 router.afterEach((to) => {
   const meta = to.meta
-
   document.title = meta.title ?? 'Bakano'
   setMeta('description', meta.description ?? '')
   setOgMeta('og:title', meta.ogTitle ?? meta.title ?? '')
@@ -193,7 +151,6 @@ router.afterEach((to) => {
   setOgMeta('twitter:title', meta.ogTitle ?? meta.title ?? '')
   setOgMeta('twitter:description', meta.ogDescription ?? meta.description ?? '')
   setCanonical(meta.canonical ?? '')
-  syncJsonLd(meta.jsonLd as object[] | undefined)
 })
 
 export default router

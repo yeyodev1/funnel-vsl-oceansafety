@@ -6,4 +6,9 @@ body {
   background-color: $white;
   margin: 0;
   font-family: $font-principal;
+  box-sizing: border-box; // Reset inicial
+}
+
+*, *::before, *::after {
+  box-sizing: inherit; // Herencia controlada
 }

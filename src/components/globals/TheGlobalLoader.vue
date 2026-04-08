@@ -1,53 +1,99 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 
 const isComplete = ref(false)
 const progress = ref(0)
-const textPhrases = ['Analizando...', 'Estrategizando...', 'Escalando...']
-const currentText = ref(textPhrases[0])
+const currentText = ref('Cargando...')
+const phrases = ['Cargando...', 'Preparando...', 'Listo.']
 
-const emit = defineEmits<{
-  (e: 'complete'): void
-}>()
+const emit = defineEmits<{ (e: 'complete'): void }>()
 
-onMounted(() => {
-  // Simular carga de 0 a 100% (ajusta el timing real de assets aquí)
-  const proxy = { percent: 0 }
+let pageLoaded = false
+let animProxy = { percent: 0 }
+let slowTween: gsap.core.Tween | null = null
+let resolved = false
 
-  gsap.to(proxy, {
+const finish = () => {
+  if (resolved) return
+  resolved = true
+
+  // Kill slow-phase tween and sprint to 100
+  slowTween?.kill()
+  gsap.to(animProxy, {
     percent: 100,
-    duration: 2.5, // Total loader duration
-    ease: 'power2.inOut',
+    duration: 0.4,
+    ease: 'power2.out',
     onUpdate: () => {
-      progress.value = Math.round(proxy.percent)
-
-      // Update words based on generic progress
-      if (progress.value > 80) currentText.value = textPhrases[2]
-      else if (progress.value > 40) currentText.value = textPhrases[1]
+      progress.value = Math.round(animProxy.percent)
+      currentText.value = phrases[2]
     },
     onComplete: () => {
-      // Fadeout and emit
       gsap.to('.global-loader', {
         opacity: 0,
-        pointerEvents: 'none',
-        duration: 0.6,
+        duration: 0.55,
         ease: 'power2.inOut',
         onComplete: () => {
           isComplete.value = true
           emit('complete')
-        }
+        },
       })
-    }
+    },
   })
+}
+
+const onWindowLoad = () => {
+  pageLoaded = true
+  // Only finish if animation already reached 85%
+  if (animProxy.percent >= 85) finish()
+}
+
+onMounted(() => {
+  // Phase 1: animate 0 → 85% while page loads
+  slowTween = gsap.to(animProxy, {
+    percent: 85,
+    duration: 2.2,
+    ease: 'power1.inOut',
+    onUpdate: () => {
+      progress.value = Math.round(animProxy.percent)
+      if (animProxy.percent > 55) currentText.value = phrases[1]
+    },
+    onComplete: () => {
+      // Reached 85% — now wait for page load
+      if (pageLoaded) finish()
+      // else: onWindowLoad will call finish() when ready
+    },
+  })
+
+  if (document.readyState === 'complete') {
+    pageLoaded = true
+  } else {
+    window.addEventListener('load', onWindowLoad, { once: true })
+  }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('load', onWindowLoad)
 })
 </script>
 
 <template>
-  <div v-if="!isComplete" class="global-loader">
-    <div class="global-loader__bg-text">{{ progress }}%</div>
-    <div class="global-loader__fg-text">{{ currentText }}</div>
-  </div>
+  <Transition name="loader-fade">
+    <div v-if="!isComplete" class="global-loader" aria-live="polite" aria-label="Cargando">
+
+      <!-- Número grande decorativo -->
+      <div class="global-loader__bg-num" aria-hidden="true">{{ progress }}%</div>
+
+      <!-- Barra de progreso -->
+      <div class="global-loader__bar-wrap" aria-hidden="true">
+        <div class="global-loader__bar" :style="{ width: progress + '%' }" />
+      </div>
+
+      <!-- Texto central -->
+      <p class="global-loader__text">{{ currentText }}</p>
+
+    </div>
+  </Transition>
 </template>
 
 <style lang="scss" scoped>
@@ -56,35 +102,60 @@ onMounted(() => {
 
 .global-loader {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: colors.$BAKANO-DARK;
+  inset: 0;
   z-index: 9999;
+  background: #0a0712;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 24px;
   overflow: hidden;
 
-  &__bg-text {
+  &__bg-num {
     position: absolute;
     @include fonts.heading-font(800);
-    font-size: clamp(10rem, 30vw, 40rem);
-    color: rgba(colors.$white, 0.03); // Muy sutil
+    font-size: clamp(10rem, 28vw, 38rem);
+    color: rgba(255, 255, 255, 0.025);
     line-height: 1;
     letter-spacing: -0.05em;
     user-select: none;
-    z-index: 1;
+    pointer-events: none;
   }
 
-  &__fg-text {
+  &__text {
     position: relative;
     @include fonts.heading-font(700);
-    font-size: clamp(3rem, 6vw, 6rem);
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
     color: colors.$white;
+    margin: 0;
     z-index: 2;
-    text-align: center;
+    letter-spacing: -0.01em;
   }
+
+  &__bar-wrap {
+    position: relative;
+    z-index: 2;
+    width: min(340px, 72vw);
+    height: 3px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  &__bar {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, colors.$BAKANO-PINK, colors.$BAKANO-PURPLE);
+    transition: width 0.12s linear;
+    box-shadow: 0 0 12px rgba(colors.$BAKANO-PINK, 0.6);
+  }
+}
+
+.loader-fade-leave-active {
+  transition: opacity 0.55s ease;
+}
+.loader-fade-leave-to {
+  opacity: 0;
 }
 </style>
