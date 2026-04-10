@@ -61,14 +61,25 @@ const handleSubmit = async () => {
   }
   console.info('[Bakano Agenda]', payload)
 
+  const scheduleEventId = `schedule_${Date.now()}_${Math.random().toString(36).slice(2)}`
+
   await fetch('https://services.leadconnectorhq.com/hooks/pEFChujwCCaMWBNbZYD1/webhook-trigger/69dc0e5f-e2c0-4e9f-9625-10a708787d59', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ ...payload, event_id: scheduleEventId }),
   }).catch(() => {})
+
+  if (califica) {
+    // Meta Pixel — evento Schedule (deduplicado con CAPI via event_id)
+    ;(window as any).fbq?.('track', 'Schedule',
+      { content_name: 'cita-estrategica' },
+      { eventID: scheduleEventId }
+    )
+  }
+
   submitting.value = false
   emit('close')
-  if (qualifies()) {
+  if (califica) {
     router.push('/agendar')
   } else {
     if (!IS_DEV) localStorage.setItem('bk_disq_at', String(Date.now()))

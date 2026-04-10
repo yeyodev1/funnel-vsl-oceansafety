@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import BookedHeader from '@/components/booked/BookedHeader.vue';
 import BookedHero from '@/components/booked/BookedHero.vue';
 import BookedSteps from '@/components/booked/BookedSteps.vue';
@@ -11,6 +11,11 @@ import BookedFooter from '@/components/booked/BookedFooter.vue';
  * Main orchestrator for the booking confirmation page.
  * Implements premium atmospheric effects and manages data flow.
  */
+
+onMounted(() => {
+  // Meta Pixel — cita confirmada
+  ;(window as any).fbq?.('track', 'CompleteRegistration', { content_name: 'cita-confirmada' })
+})
 
 const LUIS_PHOTO = 'https://res.cloudinary.com/dpuody0df/image/upload/v1775587087/bakano/team/luis.webp';
 const DENISSE_PHOTO = 'https://res.cloudinary.com/dpuody0df/image/upload/v1775587088/bakano/team/denisse.webp';

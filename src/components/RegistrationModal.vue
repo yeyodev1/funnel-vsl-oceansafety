@@ -140,6 +140,9 @@ const handleSubmit = async () => {
 
   submitting.value = true
 
+  // event_id compartido entre Pixel y CAPI para deduplicación
+  const leadEventId = `lead_${Date.now()}_${Math.random().toString(36).slice(2)}`
+
   const payload = {
     nombre: form.value.nombre.trim(),
     apellido: form.value.apellido.trim(),
@@ -149,6 +152,7 @@ const handleSubmit = async () => {
     empresa: form.value.empresa.trim(),
     pais: selectedCountry.value.name,
     timestamp: new Date().toISOString(),
+    event_id: leadEventId,
   }
 
   console.info('[Bakano Registro]', payload)
@@ -158,6 +162,12 @@ const handleSubmit = async () => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   }).catch(() => {})
+
+  // Meta Pixel — evento Lead (deduplicado con CAPI via event_id)
+  ;(window as any).fbq?.('track', 'Lead',
+    { content_name: 'cita-estrategica' },
+    { eventID: leadEventId }
+  )
 
   submitting.value = false
   localStorage.setItem('bk_contact', JSON.stringify({
