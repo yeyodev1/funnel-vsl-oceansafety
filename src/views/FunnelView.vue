@@ -5,6 +5,7 @@ import RegistrationModal from '@/components/RegistrationModal.vue'
 import { captureFbParams } from '@/utils/fbclid'
 import osLogo from '@/assets/logos/logo-small.png'
 import videoPlaceholder from '@/assets/stock/video.png'
+import robertoPhoto from '@/assets/team/image.png'
 
 const router = useRouter()
 const modalOpen = ref(false)
@@ -270,7 +271,7 @@ onUnmounted(() => clearInterval(interval))
       <div class="funnel__container funnel__authority-inner">
         <div class="funnel__authority-photo-wrap">
           <div class="funnel__authority-avatar" aria-hidden="true">
-            <i class="fa-solid fa-user-tie"></i>
+            <img :src="robertoPhoto" alt="Roberto Allú" class="funnel__authority-img" />
           </div>
         </div>
         <div class="funnel__authority-content">
@@ -870,7 +871,13 @@ onUnmounted(() => clearInterval(interval))
   justify-content: center;
   border: 4px solid #ffffff;
   box-shadow: 0 4px 20px rgba(0, 63, 125, 0.2);
-  i { color: rgba(#ffffff, 0.85); font-size: 3.2rem; }
+  overflow: hidden;
+}
+
+.funnel__authority-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .funnel__authority-content { flex: 1; }
