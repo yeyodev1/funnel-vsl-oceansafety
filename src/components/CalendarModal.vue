@@ -118,7 +118,7 @@ ${califica ? '✅ CALIFICA' : '❌ NO CALIFICA'}
   trackStage('cualificacion_completada', payload)
 
   // TODO: Actualizar webhook URL para Ocean Safety
-  await fetch('https://services.leadconnectorhq.com/hooks/pEFChujwCCaMWBNbZYD1/webhook-trigger/69dc0e5f-e2c0-4e9f-9625-10a708787d59', {
+  await fetch('https://services.leadconnectorhq.com/hooks/nSvINWsG3QGCGfcdpPdu/webhook-trigger/Dgr46VPmCNAtluiaBEQS', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
