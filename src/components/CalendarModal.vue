@@ -112,6 +112,7 @@ ${califica ? '✅ CALIFICA' : '❌ NO CALIFICA'}
     califica: String(califica),
     etiquetas: etiquetas.join(','),
     notas,
+    nota: notas,
     event_id: scheduleEventId,
   }
 
